@@ -30,5 +30,5 @@ make PROGRAM
 ./app/PROGRAM
 ```
 
-which consolidates all the compiled files in a single directory.
+which consolidates all the compiled objects in a single directory.
 
