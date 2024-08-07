@@ -5,18 +5,20 @@ CXX = g++
 CXXFLAGS = -std=c++20 -Wall -Wextra -O2
 
 # Source files
-SRCS = main.cpp
+SRCS = $(wildcard *.cpp)
 
 # Header files
 HDRS = mdarray.h
 
-# Target executable
-TARGET = main
+# Target executables
+TARGETS = $(SRCS:.cpp=)
 
 # Build rule
-$(TARGET): $(SRCS) $(HDRS)
-	$(CXX) $(CXXFLAGS) -o $(TARGET) $(SRCS)
+all: $(TARGETS)
+
+%: %.cpp $(HDRS)
+	$(CXX) $(CXXFLAGS) -o $@ $<
 
 # Clean rule
 clean:
-	rm -f $(TARGET)
+	rm -f $(TARGETS)

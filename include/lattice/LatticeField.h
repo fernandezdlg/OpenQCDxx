@@ -10,20 +10,18 @@ template <typename T>
 class LatticeField {
 public:
     LatticeField(
-        const int dim1, const int dim2, const int dim3, const int dim4,
+        const int dim0, const int dim1, const int dim2, const int dim3,
         const T default_value
     );
     ~LatticeField() = default;
 
-    void print() const;
+    void print(size_t i0, size_t i1, size_t i2, size_t i3) const;
     void randomize();
 
 private:
-    int dim1, dim2, dim3, dim4;
-    int volume;
-    // FIXME: Better to use std::vector instead?
-    mdarray<T, dim0, dim1, dim2, dim3> field_values;
-
+    const int dim0, dim1, dim2, dim3;
+    const int volume;
+    std::array<T, volume> field_values;
 };
 
 #endif // LATTICEFIELD_H
