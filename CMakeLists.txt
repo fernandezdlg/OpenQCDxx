@@ -8,9 +8,9 @@ set(CMAKE_CXX_STANDARD 17)
 set(CMAKE_CXX_STANDARD_REQUIRED True)
 
 # Add the executables
-add_executable(init_print_lattice app/init_print_lattice/main.cpp modules/lattice/LatticeGeometry.cpp)
-add_executable(randomize app/randomize/main.cpp modules/lattice/LatticeGeometry.cpp)
-add_executable(compute_plaquette app/compute_plaquette/main.cpp modules/lattice/LatticeGeometry.cpp modules/gauge/GaugeField.cpp)
+add_executable(init_print_lattice app/init_print_lattice/main.cpp modules/lattice/LatticeField.cpp)
+add_executable(randomize app/randomize/main.cpp modules/lattice/LatticeField.cpp)
+add_executable(compute_plaquette app/compute_plaquette/main.cpp modules/lattice/LatticeField.cpp modules/gauge/GaugeField.cpp)
 
 # Include directories
 target_include_directories(init_print_lattice PRIVATE include)
