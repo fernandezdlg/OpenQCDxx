@@ -77,7 +77,7 @@ void LatticeField<T>::randomize() {
 }
 
 
-// Explicit template instantiation`
+// Explicit template instantiations
 template class LatticeField<float>;
 template class LatticeField<double>;
 template class LatticeField<std::complex<float>>;

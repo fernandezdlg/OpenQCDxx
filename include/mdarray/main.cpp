@@ -1,5 +1,5 @@
 #include <iostream>
-#include "mdarrays.h"
+#include "mdarray.h"
 
 
 // Example. use case

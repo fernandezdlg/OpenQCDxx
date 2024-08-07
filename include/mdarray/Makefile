@@ -8,7 +8,7 @@ CXXFLAGS = -std=c++20 -Wall -Wextra -O2
 SRCS = main.cpp
 
 # Header files
-HDRS = mdarrays.h
+HDRS = mdarray.h
 
 # Target executable
 TARGET = main
