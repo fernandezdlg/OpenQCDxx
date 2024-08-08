@@ -26,6 +26,7 @@ add_executable(apply_func app/parallel_computations/apply_func.cpp ${MODULES_SOU
 add_executable(reduce_if app/parallel_computations/reduce_if.cpp ${MODULES_SOURCES})
 
 # Include directories
+target_include_directories(print_tests PRIVATE include)
 target_include_directories(randomize PRIVATE include)
 target_include_directories(apply_func PRIVATE include)
 target_include_directories(reduce_if PRIVATE include)
