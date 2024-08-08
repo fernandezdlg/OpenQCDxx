@@ -24,8 +24,8 @@ and a bunch of object files were created along the source code,
 now it is:
 
 ```bash
-cd OpenQCDxx/build
-cmake ..
+cd OpenQCDxx
+mkdir build && cd $_cmake ..
 make PROGRAM
 ./app/PROGRAM
 ```
