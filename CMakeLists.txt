@@ -20,7 +20,7 @@ set(MODULE_SOURCES
 )
 
 # Add the executables
-add_executable(print_tests app/print_tests.cpp ${MODULES_SOURCES})
+add_executable(print_tests app/latticeField_tests/print_tests.cpp ${MODULES_SOURCES})
 add_executable(randomize app/parallel_computations/randomize.cpp ${MODULES_SOURCES})
 add_executable(apply_func app/parallel_computations/apply_func.cpp ${MODULES_SOURCES})
 add_executable(reduce_if app/parallel_computations/reduce_if.cpp ${MODULES_SOURCES})
