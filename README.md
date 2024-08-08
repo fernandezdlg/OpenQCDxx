@@ -25,7 +25,8 @@ now it is:
 
 ```bash
 cd OpenQCDxx
-mkdir build && cd $_cmake ..
+mkdir build && cd $_
+cmake ..
 make PROGRAM
 ./app/PROGRAM
 ```
