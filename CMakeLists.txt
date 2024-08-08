@@ -15,7 +15,7 @@ set(CMAKE_CXX_COMPILER "g++-14")
 set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -std=c++20")
 
 # List of module source files
-set(MODULE_SOURCES
+set(MODULES_SOURCES
     modules/lattice/LatticeField.cpp
 )
 
