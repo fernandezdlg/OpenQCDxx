@@ -1,5 +1,5 @@
 #include <iostream>
-#include "mdarrays.h"
+#include "mdarray.h"
 
 
 // Example. use case
@@ -27,6 +27,11 @@ int main() {
     std::cout << "arr[1][2][1][0]: " << arr[1][2][1][0] << std::endl;
     std::cout << "arr[4][3][2][1]: " << arr[4][3][2][1] << std::endl;
 
+    // TODO: Maybe add a size() method to the mdarray type such that the following works:
+    // auto size = arr.size(0);
+    // auto size = arr.size(1);
+    // auto size = arr.size(2);
+    // auto size = arr.size(3);
     std::cout << "Size 0 of arr: " << arr.size() << std::endl;
     std::cout << "Size 1 of arr: " << arr[0].size() << std::endl;
     std::cout << "Size 2 of arr: " << arr[0][0].size() << std::endl;
