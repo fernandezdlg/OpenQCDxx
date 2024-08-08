@@ -49,19 +49,19 @@ using mdarray = typename mdarray_impl<T, sizes...>::type;
 // Function template to fill the mdarray with a default value
 // FIXME: This is buggy.
 // template <typename T, std::size_t dim_i, std::size_t... dim_ixx>
-// void fill_mdarray_with_value(mdarray_impl<T, dim_i, dim_ixx...>& arr, const T& default_value) {
+// void fill_mdarray_with_value(mdarray_impl<T, dim_i, dim_ixx...>& arr, const T& init_value) {
 //     for (auto& sub_arr : arr) {
-//         fill_mdarray_with_value<T, dim_ixx...>(sub_arr, default_value); // Recursive call
+//         fill_mdarray_with_value<T, dim_ixx...>(sub_arr, init_value); // Recursive call
 //     }
 // }
 
 // Function to fill with default value on 4D array
 template <typename T, std::size_t dim_0, std::size_t dim_1, std::size_t dim_2, std::size_t dim_3>
-void fill_mdarray_with_value_4d(mdarray<T, dim_0, dim_1, dim_2, dim_3>& arr, const T& default_value) {
+void fill_mdarray_with_value_4d(mdarray<T, dim_0, dim_1, dim_2, dim_3>& arr, const T& init_value) {
     for (auto& sub_arr_3d : arr) {
         for (auto& sub_arr_2d : sub_arr_3d) {
             for (auto& sub_arr_1d : sub_arr_2d) {
-                std::fill(sub_arr_1d.begin(), sub_arr_1d.end(), default_value); // Fill innermost array
+                std::fill(sub_arr_1d.begin(), sub_arr_1d.end(), init_value); // Fill innermost array
             }
         }
     }
@@ -69,8 +69,8 @@ void fill_mdarray_with_value_4d(mdarray<T, dim_0, dim_1, dim_2, dim_3>& arr, con
 
 // Base case for the innermost array
 template <typename T, std::size_t dim_i>
-void fill_mdarray_with_value(std::array<T, dim_i>& arr, const T& default_value) {
-    std::fill(arr.begin(), arr.end(), default_value); // Fill innermost array
+void fill_mdarray_with_value(std::array<T, dim_i>& arr, const T& init_value) {
+    std::fill(arr.begin(), arr.end(), init_value); // Fill innermost array
 }
 
 
@@ -98,15 +98,15 @@ void fill_mdarray_with_iterator_4d(mdarray<T, dim_0, dim_1, dim_2, dim_3>& arr, 
 
 // // Function template to fill the mdarray with a default value
 // template <typename T, std::size_t size, std::size_t... sizes>
-// void fill_mdarray_with_value(mdarray<T, size, sizes...>& arr, const T& default_value) {
+// void fill_mdarray_with_value(mdarray<T, size, sizes...>& arr, const T& init_value) {
 //     for (auto& sub_arr : arr) {
-//         fill_mdarray_with_value(sub_arr, default_value); // Recursive call
+//         fill_mdarray_with_value(sub_arr, init_value); // Recursive call
 //     }
 // }
 
 // // Base case for the innermost array
 // template <typename T, std::size_t size>
-// void fill_mdarray_with_value(std::array<T, size>& arr, const T& default_value) {
-//     std::fill(arr.begin(), arr.end(), default_value); // Fill innermost array
+// void fill_mdarray_with_value(std::array<T, size>& arr, const T& init_value) {
+//     std::fill(arr.begin(), arr.end(), init_value); // Fill innermost array
 // }
 

@@ -28,8 +28,8 @@ int main() {
     constexpr std::size_t dim_4 = 5;
 
     mdarray<int, dim_4> arr_1d;
-    int default_value = 33;
-    fill_mdarray_with_value(arr_1d, default_value);
+    int init_value = 33;
+    fill_mdarray_with_value(arr_1d, init_value);
     std::cout << arr_1d[0] << std::endl; // Should print 33
     return 0;
 }
