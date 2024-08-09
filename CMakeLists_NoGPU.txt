@@ -1,18 +1,18 @@
 cmake_minimum_required(VERSION 3.20)
 
 # Set the project name
-project(OpenQCD++ LANGUAGES CXX CUDA)
-
-# Required for offloading to NVIDIA GPUs (this may be different for other envs)
-find_package(CUDA 12.0 REQUIRED)
-find_package(NVHPC REQUIRED PATHS "/opt/nvidia/hpc_sdk/Linux_x86_64/2024/cmake/")
+project(OpenQCD++)
 
 # Specify the C++ standard
 set(CMAKE_CXX_STANDARD 20)  # This is necessary for the std::execution policies.
 set(CMAKE_CXX_STANDARD_REQUIRED ON)
 
-# Ensure the standard parallelism is active, C++20 standard is used and add option for openmp for CPU parallelism.
-set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -fopenmp -O3 -std=c++20")
+# Specify the compilers
+set(CMAKE_C_COMPILER "gcc-14")
+set(CMAKE_CXX_COMPILER "g++-14")
+
+# Ensure the GCC standard library is used
+set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -std=c++20")
 
 # List of module source files
 set(MODULES_SOURCES
@@ -30,7 +30,3 @@ target_include_directories(print_tests PRIVATE include)
 target_include_directories(randomize PRIVATE include)
 target_include_directories(apply_func PRIVATE include)
 target_include_directories(reduce_if PRIVATE include)
-
-# Compile definitions and link libraries
-target_compile_definitions(randomize PRIVATE -DSTD_PAR)
-target_link_libraries(randomize PRIVATE NVHPC::CUDA NVHPC::MATH)
