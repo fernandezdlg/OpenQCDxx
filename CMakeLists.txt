@@ -3,34 +3,37 @@ cmake_minimum_required(VERSION 3.20)
 # Set the project name
 project(OpenQCD++ LANGUAGES CXX CUDA)
 
-# Required for offloading to NVIDIA GPUs (this may be different for other envs)
-find_package(CUDA 12.0 REQUIRED)
-find_package(NVHPC REQUIRED PATHS "/opt/nvidia/hpc_sdk/Linux_x86_64/2024/cmake/")
-
 # Specify the C++ standard
 set(CMAKE_CXX_STANDARD 20)  # This is necessary for the std::execution policies.
 set(CMAKE_CXX_STANDARD_REQUIRED ON)
 
-# Ensure the standard parallelism is active, C++20 standard is used and add option for openmp for CPU parallelism.
-set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -fopenmp -O3 -std=c++20")
+# Specify the NVIDIA HPC SDK compilers
+set(CMAKE_C_COMPILER "nvc")
+set(CMAKE_CXX_COMPILER "nvc++")
+set(CMAKE_CUDA_COMPILER "nvcc")
+
+# Find CUDA
+find_package(CUDA REQUIRED)
+
+# Ensure the NVIDIA C++ compiler is used with GPU support
+set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -stdpar=gpu")
+set(CMAKE_EXE_LINKER_FLAGS "${CMAKE_EXE_LINKER_FLAGS} -stdpar=gpu")
 
 # List of module source files
 set(MODULES_SOURCES
     modules/lattice/LatticeField.cpp
 )
 
+# Function to add an executable with proper settings
+function(add_gpu_executable NAME)
+    add_executable(${NAME} ${ARGN})
+    target_include_directories(${NAME} PRIVATE include)
+    target_compile_options(${NAME} PRIVATE -stdpar=gpu)
+    target_link_options(${NAME} PRIVATE -stdpar=gpu)
+endfunction()
+
 # Add the executables
-add_executable(print_tests app/latticeField_tests/print_tests.cpp ${MODULES_SOURCES})
-add_executable(randomize app/parallel_computations/randomize.cpp ${MODULES_SOURCES})
-add_executable(apply_func app/parallel_computations/apply_func.cpp ${MODULES_SOURCES})
-add_executable(reduce_if app/parallel_computations/reduce_if.cpp ${MODULES_SOURCES})
-
-# Include directories
-target_include_directories(print_tests PRIVATE include)
-target_include_directories(randomize PRIVATE include)
-target_include_directories(apply_func PRIVATE include)
-target_include_directories(reduce_if PRIVATE include)
-
-# Compile definitions and link libraries
-target_compile_definitions(randomize PRIVATE -DSTD_PAR)
-target_link_libraries(randomize PRIVATE NVHPC::CUDA NVHPC::MATH)
+add_gpu_executable(print_tests app/latticeField_tests/print_tests.cpp ${MODULES_SOURCES})
+add_gpu_executable(randomize app/parallel_computations/randomize.cpp ${MODULES_SOURCES})
+add_gpu_executable(apply_func app/parallel_computations/apply_func.cpp ${MODULES_SOURCES})
+add_gpu_executable(reduce_if app/parallel_computations/reduce_if.cpp ${MODULES_SOURCES})
