@@ -1,22 +1,22 @@
 // This declares the classes involving the RANLUX-24 random number generator as per the C++ standard
 // library implementations. TODO: Get this working with parallel exec ? Or fallback to modernized
 // SSE/AVX implementations?
-#ifndef RANLXS_H
-#define RANLXS_H
+#ifndef RANLXD_H
+#define RANLXD_H
 
 #include <random>
 #include <string>
 #include <fstream>
 
-// Templated Ranlxs class
-template<size_t p = 223, size_t r = 23>
-class Ranlxs {
+// Templated Ranlxd class
+template<size_t p = 389, size_t r = 11>
+class Ranlxd {
 public:
-    Ranlxs(int seed) : generator(seed) {}
+    Ranlxd(int seed) : generator(seed) {}
 
     // This function generates a random number between 0 and 1
-    float operator()() {
-        return static_cast<float>(generator()) / (uint_fast32_t{1} << 24);
+    double operator()() {
+        return static_cast<double>(generator()) / (uint_fast64_t{1} << 48);
     }
 
     // This function retrieves the current state of the generator
@@ -34,12 +34,12 @@ public:
     }
 
     // Getter for the generator for special cases (e.g. re-seeding)
-    std::discard_block_engine<std::ranlux24_base, p, r>& get_gen() {
+    std::discard_block_engine<std::ranlux48_base, p, r>& get_gen() {
         return generator;
     }
 
 private:
-    std::discard_block_engine<std::ranlux24_base, p, r> generator;
+    std::discard_block_engine<std::ranlux48_base, p, r> generator;
 };
 
-#endif // RANLXS_H
+#endif // RANLXD_H
