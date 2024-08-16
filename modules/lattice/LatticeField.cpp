@@ -1,5 +1,4 @@
 #include "lattice/LatticeField.h"
-#include "common_utilities.h"
 #include <random>
 #include <algorithm>
 #include <execution>
@@ -9,41 +8,46 @@
 // Constructor implementation.
 template <typename T>
 LatticeField<T>::LatticeField(
-        const size_t dim0,
-        const size_t dim1,
-        const size_t dim2,
-        const size_t dim3,
-        const T init_value
-) : dim0(dim0),
-    dim1(dim1),
-    dim2(dim2),
-    dim3(dim3),
-    volume(dim0 * dim1 * dim2 * dim3) {
-        // Initialize std::vector<T> field_values to init_value
-        field_values.resize(volume, init_value);
-    }
+        size_t dim0, size_t dim1, size_t dim2, size_t dim3,
+        T init_value
+) : dim0(dim0), dim1(dim1), dim2(dim2), dim3(dim3),
+    volume(dim0 * dim1 * dim2 * dim3)
+{
+    field_values.resize(volume, init_value);
+}
 
 
-// Non-const version of operator()
+// Destructor implementation.
 template <typename T>
-T& LatticeField<T>::operator()(size_t i0, size_t i1, size_t i2, size_t i3) {
-    size_t index = i0 * (dim1 * dim2 * dim3) + i1 * (dim2 * dim3) + i2 * dim3 + i3;
-    return field_values[index];
+LatticeField<T>::~LatticeField() {
+    // For now, nothing to do here, the vector will be automatically destroyed. Maybe for later when
+    // we instantiate in the heap: TODO:?
+    // delete[] field_values;
+}
+
+
+// Flat index calculation for the field_values vector.
+template <typename T>
+size_t LatticeField<T>::get_flat_idx(size_t i0, size_t i1, size_t i2, size_t i3) const {
+    return i0 * (dim1 * dim2 * dim3) + i1 * (dim2 * dim3) + i2 * dim3 + i3;
 }
 
 
 // Const version of operator()
 template <typename T>
 const T& LatticeField<T>::operator()(size_t i0, size_t i1, size_t i2, size_t i3) const {
-    size_t index = i0 * (dim1 * dim2 * dim3) + i1 * (dim2 * dim3) + i2 * dim3 + i3;
-    return field_values[index];
+    return field_values[get_flat_idx(i0, i1, i2, i3)];
 }
 
 
-// Implementation of the get_flat_idx method.
+// Implementation of the randomize with distribution and generator method.
 template <typename T>
-size_t LatticeField<T>::get_flat_idx(size_t i0, size_t i1, size_t i2, size_t i3) const {
-    return i0 * (dim1 * dim2 * dim3) + i1 * (dim2 * dim3) + i2 * dim3 + i3;
+template <typename Distribution, typename Generator>
+void LatticeField<T>::randomize(Distribution& distribution, Generator& generator) {
+    // Fill field_values with random values
+    for (auto &elem : field_values) {
+        elem = distribution(generator);
+    }
 }
 
 
@@ -63,8 +67,6 @@ void LatticeField<T>::randomize_sequential() {
     } else if constexpr (std::is_same<T, std::complex<float>>::value || std::is_same<T, std::complex<double>>::value) {
         auto dist = std::uniform_real_distribution<typename T::value_type>(0.0, 1.0);
         dis = [dist](std::mt19937& gen) mutable { return T(dist(gen), dist(gen)); };
-    } else {
-        static_assert(always_false<T>::value, "Unsupported type");
     }
 
     // Fill field_values with random values
@@ -90,8 +92,6 @@ void LatticeField<T>::randomize() {
     } else if constexpr (std::is_same<T, std::complex<float>>::value || std::is_same<T, std::complex<double>>::value) {
         auto dist = std::uniform_real_distribution<typename T::value_type>(0.0, 1.0);
         dis = [dist](std::mt19937& gen) mutable { return T(dist(gen), dist(gen)); };
-    } else {
-        static_assert(always_false<T>::value, "Unsupported type");
     }
 
     // Fill field_values with random values
@@ -103,11 +103,13 @@ void LatticeField<T>::randomize() {
 
 // Implementation of the fun method.
 template <typename T>
-void LatticeField<T>::func(std::function<void(T&)> fun) {
+void LatticeField<T>::apply_func(std::function<void(T&)> fun) {
     std::for_each(std::execution::par_unseq, field_values.begin(), field_values.end(), fun);
 }
+
+
 template <typename T>
-void LatticeField<T>::func_sequential(std::function<void(T&)> fun) {
+void LatticeField<T>::apply_func_sequential(std::function<void(T&)> fun) {
     for (auto &elem : field_values) {
         fun(elem);
     }
@@ -127,6 +129,8 @@ T LatticeField<T>::reduce_if(std::function<bool(const T&)> predicate, T init,
         [&](const T& value) { return predicate(value) ? value : T{}; }
     );
 }
+
+
 template <typename T>
 T LatticeField<T>::reduce_if_sequential(std::function<bool(const T&)> predicate, T init,
                                       std::function<T(const T&, const T&)> binary_op) {
