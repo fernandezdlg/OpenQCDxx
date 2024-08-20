@@ -5,7 +5,17 @@
 #include <numeric>
 
 
-// Constructor implementation.
+// Constructor implementations.
+template <typename T>
+LatticeField<T>::LatticeField(size_t dim0, size_t dim1, size_t dim2, size_t dim3)
+    : dim0(dim0), dim1(dim1), dim2(dim2), dim3(dim3),
+      volume(dim0 * dim1 * dim2 * dim3)
+{
+    field_values.resize(volume);
+}
+
+
+
 template <typename T>
 LatticeField<T>::LatticeField(
         size_t dim0, size_t dim1, size_t dim2, size_t dim3,
