@@ -1,3 +1,7 @@
 build
 .vscode
 *.html
+*.csv
+.idea
+cmake-build-debug
+.clangd
