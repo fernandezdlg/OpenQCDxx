@@ -38,6 +38,12 @@ public:
         return generator;
     }
 
+    // Overload for calling dist(gen) with a Ranlxd object
+    template<typename Distribution>
+    typename Distribution::result_type operator()(Distribution& d) {
+        return d(generator);
+    }
+
 private:
     std::discard_block_engine<std::ranlux48_base, p, r> generator;
 };
